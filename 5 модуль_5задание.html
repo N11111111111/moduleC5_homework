@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="Ponomarenko_N" content="width=device-width, initial-scale=1.0">
+    <title>Модуль 5 задание 5</title>
+
+</head>
+<body>
+ <h1>Задание 5</h1>
+   <form>
+  <legend>Задайте параметры</legend>
+  <p> <label>Номер страницы</label> <br />
+    <input id="num1" class="text" size="20" name = value1> </p>
+  <p> <label>Лимит</label> <br />
+    <input id="num2" class="text" size="20" name = value2> </p>
+  
+</form>
+ <button class="btn j-btn-request">Запрос</button>
+ <div class="result j-result"> </div>  
+
+ 
+    <style>
+ .result {
+  display: flex;
+  flex-wrap;
+  width: 500px;
+} 
+.card-image {
+            display: block;
+            width: 200px;
+            height: 150px;
+        }
+        .card {
+            margin-top: 20px;
+            width: 200px;
+        }   
+
+ .btn {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  margin: 5px 10px;
+  padding: 10px 15px;
+  border-radius: 1px;
+  font-size: 12px;
+  line-height: 15px;
+  text-transform: uppercase;
+  color: white;
+  background: #315efb;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  box-shadow: 0px 2px 8px 2px rgba(141, 150, 178, .3);
+  transform: scale(1.05);
+  
+
+  </style>
+
+
+
+<script>
+function useRequest(value1, value2) {
+   fetch(`https://picsum.photos/v2/list?page=${value1}&limit=${value2}`)
+  .then((response) => response.json()) 
+  .then((json) => {
+     displayResult(json);
+     savePhotosToLocalStorage();
+
+        })
+        .catch((reason) => {
+            resultNode.innerHTML = `(Ошибка:  ${reason})`;
+        });     
+       }    
+
+ const btnNode = document.querySelector('.j-btn-request');
+ const resultNode = document.querySelector('.j-result');
+
+
+function displayResult(apiData) {
+  let cards = '';
+  // console.log('start cards', cards);
+  
+  apiData.forEach(item => {
+    const cardBlock = `
+      <div class="card">
+        <img
+          src="${item.download_url}"
+          class="card-image"
+        />
+        <p>${item.author}</p>
+      </div>
+    `;
+    cards = cards + cardBlock;
+  });
+  // console.log('end cards', cards);
+  resultNode.innerHTML = cards;
+}
+
+ function readInput() {
+ const value1 = document.querySelector('#num1').value;
+ const value2 = document.querySelector('#num2').value;
+  
+ if (( value1 < 1 || value1 > 10 || typeof value1 == "" || isNaN(value1)) && (value2 < 1 || value2 > 10 || typeof value2 == "" || isNaN(value2)))   {
+   resultNode.innerHTML = 'Номер страницы и лимит вне диапазона от 1 до 10';
+
+ } else if  (value1 < 1 || value1 > 10 || typeof value1 == "" || isNaN(value1))  {
+     resultNode.innerHTML = 'Номер страницы вне диапазона от 1 до 10';
+ } else if  (value2 < 1 || value2 > 10 || typeof value2 == "" || isNaN(value2))  {
+      resultNode.innerHTML = 'Лимит вне диапазона от 1 до 10'; 
+ } else {
+       resultNode.innerHTML = 'Фото загружаются..'; 
+       useRequest(value1, value2, displayResult);     
+   }
+ } 
+   
+function savePhotosToLocalStorage() {
+localStorage.setItem("last_photos", displayResult.innerHTML);
+}
+  
+function loadPhotosFromLocalStorage() {
+displayResult.innerHTML = localStorage.getItem("last_photos");
+return  displayResult.innerHTML.length > 0;
+}
+
+
+   
+btnNode.addEventListener('click', readInput) 
+
+</script>
+
+
+</body>
+</html>

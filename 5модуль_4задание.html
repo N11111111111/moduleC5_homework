@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="Ponomarenko_N" content="width=device-width, initial-scale=1.0">
+    <title>Модуль 5 задание 4</title>
+</head>
+<body>
+  <h1>Задание 4</h1>
+   
+   <form>
+  <legend>Задайте размер фотографии</legend>
+  <p> <label>Ширина</label> <br />
+    <input id="num1" class="text" size="20" name = value1> </p>
+  <p> <label>Высота</label> <br />
+    <input id="num2" class="text" size="20" name = value2> </p>
+  
+</form>
+  <button class="btn j-btn-request">Вывод картинки</button>
+ <div class="result j-result"> </div>  
+  <img id="result"/>
+
+    <style>
+ .result {
+  display: flex;
+  flex-wrap;
+  width: 500px;
+}     
+ .btn {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  margin: 5px 10px;
+  padding: 10px 15px;
+  border-radius: 1px;
+  font-size: 12px;
+  line-height: 15px;
+  text-transform: uppercase;
+  color: white;
+  background: #315efb;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  box-shadow: 0px 2px 8px 2px rgba(141, 150, 178, .3);
+  transform: scale(1.05);
+  </style>
+  <script>
+   const btnNode = document.querySelector('.j-btn-request');
+
+ btnNode.addEventListener('click', () =>{
+  const resultNode = document.querySelector('.j-result');
+  const value1 = document.querySelector('#num1').value;
+  const value2 = document.querySelector('#num2').value;
+    if ((value1 < 300 || value1 > 500) || (value2 < 300 || value2 > 500)) {
+         resultNode.innerHTML = 'Число вне диапазона от 300 до 500';
+            }else{
+   fetch(`https://picsum.photos/${value1}/${value2}`)
+  .then((response) => {
+     
+resultNode.innerHTML = `<img src="${response.url}"/>`;
+//document.getElementById('result').src = response.url; 
+        });
+       }
+     }); 
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

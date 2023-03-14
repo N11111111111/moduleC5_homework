@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="Ponomarenko_N" content="width=device-width, initial-scale=1.0">
+    <title>Модуль 5 задание 3</title>
+</head>
+<body>
+  <h1>Задание 3</h1>
+    <form>
+        <input type="text" name="value">
+    </form>
+   
+ <button class="btn j-btn-request">Нажмите на кнопку для вывода картинок</button>
+  <div class="result j-result"> </div>
+  
+  
+    <style>
+  .result {
+  display: flex;
+  flex-wrap;
+  width: 500px;
+}
+.card-image {
+            display: block;
+            width: 200px;
+            height: 150px;
+        }
+        .card {
+            margin-top: 20px;
+            width: 200px;
+        }
+      .btn {
+  padding: 10;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  margin: 10px 0px;
+  padding: 10px 15px;
+  border-radius: 1px;
+  font-size: 12px;
+  line-height: 15px;
+  text-transform: uppercase;
+  color: white;
+  background: #315efb;
+  transition: 0.3s;
+        
+      }
+  </style>
+  
+<script>
+  function useRequest(value, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET',`https://picsum.photos/v2/list/?limit=${value}`, true);
+  
+  xhr.onload = function() {
+    if (xhr.status != 200) {
+      console.log('Статус ответа: ', xhr.status);
+    } else {
+      const result = JSON.parse(xhr.response);
+      if (callback) {
+        callback(result);
+      }
+    }
+  };
+   
+  xhr.onerror = function() {
+    console.log('Ошибка! Статус ответа: ', xhr.status);
+  };
+  
+  xhr.send();
+};
+
+const resultNode = document.querySelector('.j-result');
+// Ищем кнопку, по нажатии на которую будет запрос
+const btnNode = document.querySelector('.j-btn-request');
+
+
+//3 этап
+function displayResult(apiData) {
+  let cards = '';
+  // console.log('start cards', cards);
+  
+  apiData.forEach(item => {
+    const cardBlock = `
+      <div class="card">
+        <img
+          src="${item.download_url}"
+          class="card-image"
+        />
+        <p>${item.author}</p>
+      </div>
+    `;
+    cards = cards + cardBlock;
+  });
+  
+  // console.log('end cards', cards);
+    
+  resultNode.innerHTML = cards;
+}
+ 
+//
+        function readInput() {
+          const value = document.querySelector('input').value;
+            if (value < 1 || value > 10){
+               resultNode.innerHTML = 'Число вне диапазона от 1 до 10';
+            }else{
+                useRequest(value, displayResult);
+            }
+        };
+
+btnNode.addEventListener('click', readInput) 
+</script>
+</body>
+</html>
